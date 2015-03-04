@@ -61,6 +61,7 @@ public class VentanaAnimacion extends javax.swing.JFrame {
         g2.fillRect(0, 0, anchoPantalla, altoPantalla);
         ///////////////////// dibujo a link //////////////
 
+        link.setDir(direccion);
         link.dibuja(g2);
         
         

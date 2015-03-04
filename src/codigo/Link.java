@@ -13,7 +13,16 @@ import javax.imageio.ImageIO;
  */
 public class Link {
      Image link;
-     int contador = 0;
+     private int contador = 0;
+     int dir = 0;
+
+    public int getDir() {
+        return dir;
+    }
+
+    public void setDir(int dir) {
+        this.dir = dir;
+    }
      
      public Link (){
         try {
@@ -24,18 +33,27 @@ public class Link {
      }
      
      public void dibuja (Graphics2D g2){
+         int fila = 0;
+         switch (dir){
+             case 0: fila = 0; break;  //está parado
+             case 1: fila = 5; break;  //izquierda
+             case 2: fila = 7; break;  //derecha
+             case 3: fila = 6; break;  //arriba
+             case 4: fila = 4; break;  //abajo  
+         }
         g2.drawImage(link,
                    100,  //posición x dentro del buffer
                    100,  //posición y dentro del buffer
-                   120,  //tamaño en el eje x del frame que quiero pintar
-                   130,  //tamaño en el eje y del frame que quiero pintar
+                   2*120,  //tamaño en el eje x del frame que quiero pintar
+                   2*130,  //tamaño en el eje y del frame que quiero pintar
                    contador*120, //posicion inicial x dentro del SPRITESHEET
-                    7*130, // posicion inicial y dentro del spritesheet
+                    fila*130, // posicion inicial y dentro del spritesheet
                    contador*120 + 120, //tamaño del tile (ancho)
-                   7*130 + 130, //tamaño del tile (alto)
+                   fila*130 + 130, //tamaño del tile (alto)
                    null
                    );
-        contador++;
+        
+        if (dir != 0) contador++;
         if (contador == 10) contador = 0; 
      }
 }
