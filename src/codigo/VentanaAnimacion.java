@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.logging.Level;
@@ -30,20 +31,23 @@ public class VentanaAnimacion extends javax.swing.JFrame {
         }
     });
 
-    Image link;
+    Link link = new Link();
     
-    int contador = 0;
+
+    
+    // variable para guardar la direccion
+    //si vale 0 => parado
+    //si vale 1 => izquierda
+    //si vale 2 => derecha
+    //si vale 3 => arriba
+    //si vale 4 => abajo
+    int direccion = 0;
     
     /**
      * Creates new form VentanaAnimacion
      */
     public VentanaAnimacion() {
         initComponents();
-        try {
-            link = ImageIO.read((getClass().getResource("/imagenes/link.png")));
-        } catch (IOException ex) {
-            Logger.getLogger(VentanaAnimacion.class.getName()).log(Level.SEVERE, null, ex);
-        }
         this.setSize(anchoPantalla, altoPantalla);
         buffer = (BufferedImage) jPanel1.createImage(anchoPantalla, altoPantalla);
         temporizador.start();
@@ -56,21 +60,9 @@ public class VentanaAnimacion extends javax.swing.JFrame {
         g2.setColor(Color.black);
         g2.fillRect(0, 0, anchoPantalla, altoPantalla);
         ///////////////////// dibujo a link //////////////
-        contador++;
-        //si el contador ha llegado a 10 lo vuelvo a poner a 0
-        if (contador == 10) {contador = 0;}
+
+        link.dibuja(g2);
         
-        g2.drawImage(link,
-                100,  //posición x dentro del buffer
-                100,  //posición y dentro del buffer
-                120,  //tamaño en el eje x del frame que quiero pintar
-                130,  //tamaño en el eje y del frame que quiero pintar
-                contador*120, //posicion inicial x dentro del SPRITESHEET
-                 7*130, // posicion inicial y dentro del spritesheet
-                contador*120 + 120, //tamaño del tile (ancho)
-                7*130 + 130, //tamaño del tile (alto)
-                null
-                );
         
         /////////////////////////////////////////////////
         //apunto al jPanel y repinto con el nuevo buffer
@@ -92,6 +84,14 @@ public class VentanaAnimacion extends javax.swing.JFrame {
         jPanel1 = new javax.swing.JPanel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                formKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                formKeyReleased(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -117,6 +117,20 @@ public class VentanaAnimacion extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void formKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyPressed
+        switch (evt.getKeyCode()){
+            case KeyEvent.VK_LEFT   : direccion = 1; break;
+            case KeyEvent.VK_RIGHT  : direccion = 2; break;
+            case KeyEvent.VK_UP     : direccion = 3; break;
+            case KeyEvent.VK_DOWN   : direccion = 4; break;        
+        }
+   
+    }//GEN-LAST:event_formKeyPressed
+
+    private void formKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyReleased
+        direccion = 0;
+    }//GEN-LAST:event_formKeyReleased
 
     /**
      * @param args the command line arguments
