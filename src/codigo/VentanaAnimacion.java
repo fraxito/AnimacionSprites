@@ -24,7 +24,7 @@ public class VentanaAnimacion extends javax.swing.JFrame {
     int altoPantalla = 700;
     
     //temporizador para crear la animación
-    Timer temporizador = new Timer( 10, new ActionListener(){
+    Timer temporizador = new Timer( 30, new ActionListener(){
         public void actionPerformed(ActionEvent e){
             bucleJuego();
         }
@@ -32,6 +32,7 @@ public class VentanaAnimacion extends javax.swing.JFrame {
 
     Image link;
     
+    int contador = 0;
     
     /**
      * Creates new form VentanaAnimacion
@@ -55,16 +56,19 @@ public class VentanaAnimacion extends javax.swing.JFrame {
         g2.setColor(Color.black);
         g2.fillRect(0, 0, anchoPantalla, altoPantalla);
         ///////////////////// dibujo a link //////////////
+        contador++;
+        //si el contador ha llegado a 10 lo vuelvo a poner a 0
+        if (contador == 10) {contador = 0;}
         
         g2.drawImage(link,
                 100,  //posición x dentro del buffer
                 100,  //posición y dentro del buffer
                 120,  //tamaño en el eje x del frame que quiero pintar
                 130,  //tamaño en el eje y del frame que quiero pintar
-                3*120, //posicion inicial x dentro del SPRITESHEET
-                5*130, // posicion inicial y dentro del spritesheet
-                3*120 + 120, //tamaño del tile (ancho)
-                5*130 + 130, //tamaño del tile (alto)
+                contador*120, //posicion inicial x dentro del SPRITESHEET
+                 7*130, // posicion inicial y dentro del spritesheet
+                contador*120 + 120, //tamaño del tile (ancho)
+                7*130 + 130, //tamaño del tile (alto)
                 null
                 );
         
