@@ -126,11 +126,12 @@ public class VentanaAnimacion extends javax.swing.JFrame {
             case KeyEvent.VK_UP     : direccion = 3; break;
             case KeyEvent.VK_DOWN   : direccion = 4; break;        
         }
-   
+        link.parado = false;
     }//GEN-LAST:event_formKeyPressed
 
     private void formKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_formKeyReleased
-        direccion = 0;
+        link.parado = true;
+//direccion = 0;
     }//GEN-LAST:event_formKeyReleased
 
     /**

@@ -15,6 +15,7 @@ public class Link {
      Image link;
      private int contador = 0;
      int dir = 0;
+     boolean parado = true;
 
     public int getDir() {
         return dir;
@@ -34,12 +35,25 @@ public class Link {
      
      public void dibuja (Graphics2D g2){
          int fila = 0;
-         switch (dir){
-             case 0: fila = 0; break;  //está parado
-             case 1: fila = 5; break;  //izquierda
-             case 2: fila = 7; break;  //derecha
-             case 3: fila = 6; break;  //arriba
-             case 4: fila = 4; break;  //abajo  
+         // si no está parado, hace lo que hacía antes
+         if (!parado){
+            switch (dir){
+                case 1: fila = 5; break;  //izquierda
+                case 2: fila = 7; break;  //derecha
+                case 3: fila = 6; break;  //arriba
+                case 4: fila = 4; break;  //abajo  
+            }
+            contador++;
+         }
+         else { // en este caso es que está parado, y tengo que dejar
+             // el contador a 0 , y mostrar la fila correspondiente
+            switch (dir){
+                case 1: fila = 1; break;  //izquierda
+                case 2: fila = 3; break;  //derecha
+                case 3: fila = 2; break;  //arriba
+                case 4: fila = 0; break;  //abajo  
+            }
+            contador = 0;
          }
         g2.drawImage(link,
                    100,  //posición x dentro del buffer
@@ -53,7 +67,7 @@ public class Link {
                    null
                    );
         
-        if (dir != 0) contador++;
+        //else { contador = 0;} // si está parado, reseteo el contador
         if (contador == 10) contador = 0; 
      }
 }
