@@ -57,6 +57,7 @@ public class Link {
                 case 2: fila = 3; break;  //derecha
                 case 3: fila = 2; break;  //arriba
                 case 4: fila = 0; break;  //abajo  
+                
             }
             contador = 0;
          }
