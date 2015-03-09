@@ -67,10 +67,10 @@ public class VentanaAnimacion extends javax.swing.JFrame {
         for (int i=0; i < listaEsqueletos.size(); i++){
             Esqueleto e = listaEsqueletos.get(i);
             //actualizo la posicion del esqueleto en funcion de la poscion de link
-            if (e.x > link.x){e.x--;}
-            else {e.x++;}
-            if (e.y > link.y){e.y--;}
-            else {e.y++;}            
+            if (e.x > link.x){e.x--; e.dir = 3;}
+            else {e.x++; e.dir = 4;} 
+            if (e.y > link.y){e.y--; e.dir = 1;}
+            else {e.y++; e.dir = 2;}            
             
             e.dibuja(g2);
         }
