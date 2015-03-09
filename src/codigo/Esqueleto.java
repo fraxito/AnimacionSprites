@@ -11,16 +11,18 @@ import javax.imageio.ImageIO;
  *
  * @author xp
  */
-public class Link {
-     Image link;
+public class Esqueleto {
+     Image esqueleto;
         //nº de frame que le toca pintar
      private int contador = 0;
         //dirección en la que se mueve
      int dir = 0;
         //indica si esta parado o se está moviendo
      boolean parado = true;
-        //coordenadas de link
-     int x = 0, y = 0;
+        //coordenadas de esqueleto
+      int x = 0, y = 0;
+     private int anchoSprite = 64;
+     private int altoSprite = 64;
 
     public int getDir() {
         return dir;
@@ -30,9 +32,9 @@ public class Link {
         this.dir = dir;
     }
      
-     public Link (){
+     public Esqueleto (){
         try {
-            link = ImageIO.read((getClass().getResource("/imagenes/link.png")));
+            esqueleto = ImageIO.read((getClass().getResource("/imagenes/esqueletos.png")));
         } catch (IOException ex) {
             Logger.getLogger(VentanaAnimacion.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -43,38 +45,37 @@ public class Link {
          // si no está parado, hace lo que hacía antes
          if (!parado){
             switch (dir){
-                case 1: fila = 5; mueve (-6,0); break;  //izquierda
-                case 2: fila = 7; mueve (6,0); break;  //derecha
-                case 3: fila = 6; mueve (0,-6); break;  //arriba
-                case 4: fila = 4; mueve (0,6); break;  //abajo  
+                case 1: fila = 2; mueve (-6,0); break;  //izquierda
+                case 2: fila = 6; mueve (6,0); break;  //derecha
+                case 3: fila = 4; mueve (0,-6); break;  //arriba
+                case 4: fila = 0; mueve (0,6); break;  //abajo  
             }
             contador++;
          }
          else { // en este caso es que está parado, y tengo que dejar
-             // el contador a 0 , y mostrar la fila correspondiente
+             // el contador a 7 para que se vea sentado
             switch (dir){
-                case 1: fila = 1; break;  //izquierda
-                case 2: fila = 3; break;  //derecha
-                case 3: fila = 2; break;  //arriba
+                case 1: fila = 2; break;  //izquierda
+                case 2: fila = 6; break;  //derecha
+                case 3: fila = 4; break;  //arriba
                 case 4: fila = 0; break;  //abajo  
                 
             }
-            contador = 0;
+            contador = 6;
          }
-        g2.drawImage(link,
+        g2.drawImage(esqueleto,
                    x,  //posición x dentro del buffer
                    y,  //posición y dentro del buffer
-                   x+ 120/3,  //tamaño en el eje x del frame que quiero pintar
-                   y+ 130/3,  //tamaño en el eje y del frame que quiero pintar
-                   contador*120, //posicion inicial x dentro del SPRITESHEET
-                    fila*130, // posicion inicial y dentro del spritesheet
-                   contador*120 + 120, //tamaño del tile (ancho)
-                   fila*130 + 130, //tamaño del tile (alto)
+                   x+ anchoSprite,  //tamaño en el eje x del frame que quiero pintar
+                   y+ altoSprite,  //tamaño en el eje y del frame que quiero pintar
+                   contador*anchoSprite, //posicion inicial x dentro del SPRITESHEET
+                    fila*altoSprite, // posicion inicial y dentro del spritesheet
+                   contador*anchoSprite + anchoSprite, //tamaño del tile (ancho)
+                   fila*altoSprite + altoSprite, //tamaño del tile (alto)
                    null
                    );
         
-        //else { contador = 0;} // si está parado, reseteo el contador
-        if (contador == 9) contador = 0; 
+        if (contador == 6) contador = 0; 
      }
      
      private void mueve (int dx, int dy){

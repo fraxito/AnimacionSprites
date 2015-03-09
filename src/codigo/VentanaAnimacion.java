@@ -2,15 +2,12 @@ package codigo;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
-import java.awt.Image;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.imageio.ImageIO;
+import java.util.ArrayList;
+import java.util.Random;
 import javax.swing.Timer;
 
 /**
@@ -32,8 +29,11 @@ public class VentanaAnimacion extends javax.swing.JFrame {
     });
 
     Link link = new Link();
+    int spawn = 0;
     
+    ArrayList <Esqueleto> listaEsqueletos = new ArrayList();
 
+    Random aleatorio = new Random();
     
     // variable para guardar la direccion
     //si vale 0 => parado
@@ -53,6 +53,29 @@ public class VentanaAnimacion extends javax.swing.JFrame {
         temporizador.start();
     }
 
+    private void creaEsqueleto(){
+        Esqueleto e = new Esqueleto();
+        e.x = aleatorio.nextInt(anchoPantalla);
+        e.y = aleatorio.nextInt(altoPantalla);
+        e.setDir(0);
+        e.parado = false;
+        
+        listaEsqueletos.add(e);
+    }
+    
+    private void dibujaListaEsqueletos(Graphics2D g2){
+        for (int i=0; i < listaEsqueletos.size(); i++){
+            Esqueleto e = listaEsqueletos.get(i);
+            //actualizo la posicion del esqueleto en funcion de la poscion de link
+            if (e.x > link.x){e.x--;}
+            else {e.x++;}
+            if (e.y > link.y){e.y--;}
+            else {e.y++;}            
+            
+            e.dibuja(g2);
+        }
+    }
+    
     private void bucleJuego(){
         //primero apunto al buffer
         Graphics2D g2 = (Graphics2D) buffer.getGraphics();
@@ -60,7 +83,15 @@ public class VentanaAnimacion extends javax.swing.JFrame {
         g2.setColor(Color.black);
         g2.fillRect(0, 0, anchoPantalla, altoPantalla);
         ///////////////////// dibujo a link //////////////
-
+        //incrementa el contador para saber si hay que añadir esqueleto
+        spawn++;
+        if (spawn == 100){
+            creaEsqueleto();
+            spawn = 0;
+        }
+  
+        dibujaListaEsqueletos(g2);
+        
         link.setDir(direccion);
         link.dibuja(g2);
         
