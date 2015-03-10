@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Random;
@@ -32,7 +33,8 @@ public class VentanaAnimacion extends javax.swing.JFrame {
     int spawn = 0;
     
     ArrayList <Esqueleto> listaEsqueletos = new ArrayList();
-
+    ArrayList <Disparo> listaDisparos = new ArrayList();
+    
     Random aleatorio = new Random();
     
     // variable para guardar la direccion
@@ -66,15 +68,59 @@ public class VentanaAnimacion extends javax.swing.JFrame {
     private void dibujaListaEsqueletos(Graphics2D g2){
         for (int i=0; i < listaEsqueletos.size(); i++){
             Esqueleto e = listaEsqueletos.get(i);
-            //actualizo la posicion del esqueleto en funcion de la poscion de link
-            if (e.x > link.x){e.x--; e.dir = 3;}
-            else {e.x++; e.dir = 4;} 
-            if (e.y > link.y){e.y--; e.dir = 1;}
-            else {e.y++; e.dir = 2;}            
+            //actualizo la posicion del esqueleto en funcion de la posicion de link
+            if (e.x > link.x){e.x--; e.dir = 1;}
+            else if (e.x < link.x){e.x++; e.dir = 2;} 
+            
+            if (e.y > link.y){e.y--; e.dir = 3;}
+            else if (e.y < link.y) {e.y++; e.dir = 4;}            
             
             e.dibuja(g2);
         }
     }
+ 
+    private void dibujaListaDisparos(Graphics2D g2){
+        for (int i=0; i < listaDisparos.size(); i++){
+            Disparo d = listaDisparos.get(i);
+            d.dibuja(g2);
+        }
+    }
+        
+    private void dispara(){
+        Disparo d = new Disparo(link.x+16, link.y+16, link.dir);
+        listaDisparos.add(d);
+    }
+    
+    private void chequeaColision(){
+        //creo un marco para guardar el borde de la imagen del marciano
+    Rectangle2D.Double rectanguloEsqueleto = new Rectangle2D.Double();
+        //creo un marco para guardar el borde de la imagen del disparo
+    Rectangle2D.Double rectanguloDisparo = new Rectangle2D.Double(); 
+    
+        //ahora leo la lista de disparos 
+    for (int j=0; j<listaDisparos.size(); j++){
+        Disparo d = listaDisparos.get(j);
+        //asigno al rectángulo las dimensiones del disparo y su posicion
+        rectanguloDisparo.setFrame(d.x, d.y, 48/3, 48/3);
+        boolean disparoABorrar = false;
+        //leo la lista de marcianos y comparo uno a uno con el disparo
+        for (int i=0; i< listaEsqueletos.size(); i++){
+            Esqueleto e = listaEsqueletos.get(i);
+            rectanguloEsqueleto.setFrame(e.x, e.y, 64/3, 64/3);
+            if (rectanguloDisparo.intersects(rectanguloEsqueleto)){
+                listaEsqueletos.remove(i);
+                //no borro aqui el disparo para evitar que se cuelgue 
+                //listaDisparos.remove(j);
+                disparoABorrar = true;
+            }
+        }
+        if (disparoABorrar){
+            
+            listaDisparos.remove(j);
+        }
+    }
+    
+}
     
     private void bucleJuego(){
         //primero apunto al buffer
@@ -89,11 +135,15 @@ public class VentanaAnimacion extends javax.swing.JFrame {
             creaEsqueleto();
             spawn = 0;
         }
-  
-        dibujaListaEsqueletos(g2);
+        chequeaColision();
         
         link.setDir(direccion);
         link.dibuja(g2);
+
+        
+        dibujaListaEsqueletos(g2);
+        dibujaListaDisparos(g2);
+        
         
         
         /////////////////////////////////////////////////
@@ -155,7 +205,8 @@ public class VentanaAnimacion extends javax.swing.JFrame {
             case KeyEvent.VK_LEFT   : direccion = 1; break;
             case KeyEvent.VK_RIGHT  : direccion = 2; break;
             case KeyEvent.VK_UP     : direccion = 3; break;
-            case KeyEvent.VK_DOWN   : direccion = 4; break;        
+            case KeyEvent.VK_DOWN   : direccion = 4; break;
+            case KeyEvent.VK_SPACE  : dispara(); break;    
         }
         link.parado = false;
     }//GEN-LAST:event_formKeyPressed
